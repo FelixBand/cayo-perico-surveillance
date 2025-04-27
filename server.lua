@@ -188,7 +188,7 @@ Citizen.CreateThread(function()
                 if currentHost then
                     TriggerClientEvent('spawnGuard', currentHost, i)
                 end                
-                -print(string.format("^3SERVER: Spawned guard %d (players between %.1f-%.1f units)", i, spawnRadius, maxSpawnDistance))
+                print(string.format("^3SERVER: Spawned guard %d (players between %.1f-%.1f units)", i, spawnRadius, maxSpawnDistance))
             end
     
             ::continue::

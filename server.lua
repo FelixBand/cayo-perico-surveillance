@@ -145,19 +145,8 @@ Citizen.CreateThread(function()
             local allPlayersBeyondSpawn = true
             local anyPlayerWithinMaxDistance = false
             local anyPlayerWithinDespawn = false
-
-            -- Log guard info
-            print(string.format("^3[GUARD CHECK] Guard %d: Spawned=%s, Alive=%s",
-            i, tostring(currentState.spawned), tostring(currentState.alive)))
-
-            -- Print guard coords
-            print(string.format("^3[GUARD CHECK] Guard %d position: x=%.2f, y=%.2f, z=%.2f",
-                i, guardConfig.coords.x, guardConfig.coords.y, guardConfig.coords.z))
     
             for _, coords in pairs(playerCoords) do
-                -- Print player position
-                print(string.format("^2[PLAYER POS] Player %d: x=%.2f, y=%.2f, z=%.2f",
-                playerId, coords.x, coords.y, coords.z))
                 if coords then
                     local distanceToSpawn = #(coords - spawnCoords)
                     local distanceToGuard = #(coords - currentGuardCoords)
@@ -178,7 +167,7 @@ Citizen.CreateThread(function()
             if currentState.spawned and not anyPlayerWithinDespawn then
                 TriggerClientEvent('deleteGuard', -1, i)
                 spawnedPeds[i].spawned = false
-                print(string.format("^3SERVER: Despawned guard %d (no players within %.1f units)", i, currentDespawnRadius))
+                --print(string.format("^3SERVER: Despawned guard %d (no players within %.1f units)", i, currentDespawnRadius))
     
             -- Handle spawning with additional checks
             elseif not currentState.spawned and allPlayersBeyondSpawn and anyPlayerWithinMaxDistance then
@@ -188,7 +177,7 @@ Citizen.CreateThread(function()
                 if currentHost then
                     TriggerClientEvent('spawnGuard', currentHost, i)
                 end                
-                print(string.format("^3SERVER: Spawned guard %d (players between %.1f-%.1f units)", i, spawnRadius, maxSpawnDistance))
+                --print(string.format("^3SERVER: Spawned guard %d (players between %.1f-%.1f units)", i, spawnRadius, maxSpawnDistance))
             end
     
             ::continue::

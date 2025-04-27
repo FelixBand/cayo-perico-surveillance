@@ -113,7 +113,9 @@ Citizen.CreateThread(function()
         if not next(playerCoords) then
             for i = 1, #surveillancePeds do
                 if spawnedPeds[i].spawned then
-                    TriggerClientEvent('deleteGuard', -1, i)
+                    if currentHost then
+                        TriggerClientEvent('deleteGuard', currentHost, i)
+                    end                    
                     spawnedPeds[i].spawned = false
                 end
             end
@@ -172,7 +174,9 @@ Citizen.CreateThread(function()
                 pendingSpawns[i] = true
                 spawnedPeds[i].spawned = true
                 spawnedPeds[i].alive = true
-                TriggerClientEvent('spawnGuard', -1, i)
+                if currentHost then
+                    TriggerClientEvent('spawnGuard', currentHost, i)
+                end                
                 --print(string.format("^3SERVER: Spawned guard %d (players between %.1f-%.1f units)", i, spawnRadius, maxSpawnDistance))
             end
     

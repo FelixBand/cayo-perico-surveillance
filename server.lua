@@ -55,12 +55,39 @@ Citizen.CreateThread(function()
         spawnedPeds[i] = { spawned = false, alive = true }
     end
 
+    -- Host control loop — runs every 7 seconds
+    Citizen.CreateThread(function()
+        while true do
+            Wait(7000)
+
+            -- Check if there are any players online
+            if next(playerCoords) then
+                -- If no current host, assign one
+                if not currentHost then
+                    print("^5[HOST SYSTEM] No host currently, assigning one...")
+                    AssignHost()
+
+                -- If host left, assign a new one
+                elseif not playerCoords[currentHost] then
+                    print(string.format("^5[HOST SYSTEM] Current host (ID: %d) missing, reassigning...", currentHost))
+                    AssignHost()
+                end
+            else
+                -- No players online, clear host
+                if currentHost then
+                    print("^5[HOST SYSTEM] No players online — clearing host.")
+                    currentHost = nil
+                end
+            end
+        end
+    end)
+
+
     -- Update player coordinates
     RegisterNetEvent('updatePlayerCoords')
     AddEventHandler('updatePlayerCoords', function(coords)
         if coords and type(coords) == 'vector3' then
             playerCoords[source] = coords
-            AssignHost() -- Check if host needs updating
             -- print('Player Coords updated')
         end
     end)
@@ -71,17 +98,6 @@ Citizen.CreateThread(function()
             guardCoords[guardIndex] = coords
         end
     end)
-
-    AddEventHandler('playerDropped', function()
-        print(string.format("^6[HOST SYSTEM] Player %d disconnected", source))
-        playerCoords[source] = nil
-        if source == currentHost then
-            print("^6[HOST SYSTEM] Host left, reassigning...")
-            AssignHost()
-        end
-        CheckAllGuards()
-    end)
-
 
     -- Guard status update
     RegisterNetEvent('updateGuardStatus')
